@@ -8,9 +8,8 @@ image:
 serviceAccount:
   name: link-shortener-api-gateway
 
-# This section defines how the gateway is exposed to the outside world.
 service:
-  type: LoadBalancer # Exposes the service externally using MetalLB
+  type: ClusterIP
   port: 80            # The external port (standard HTTP)
   targetPort: 8080    # The internal container port
 
