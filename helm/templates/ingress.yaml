@@ -3,8 +3,6 @@ kind: Ingress
 metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}-ingress
   namespace: {{ .Release.Namespace }}
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
     - host: {{ .Values.ingress.hostname | quote }} # <-- The hostname is now a variable
