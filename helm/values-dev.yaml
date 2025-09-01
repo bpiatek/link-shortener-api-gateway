@@ -4,6 +4,9 @@ spring:
   profiles:
     active: "dev"
 
+ingress:
+  hostname: "apidev.bpiatek.pl"
+
 env:
   - name: JAVA_TOOL_OPTIONS
     value: "-XX:MaxRAMPercentage=75.0 -XX:+UseG1GC"

@@ -14,6 +14,9 @@ service:
   port: 80            # The external port (standard HTTP)
   targetPort: 8080    # The internal container port
 
+ingress:
+  hostname: "api.local"
+
 spring:
   profiles:
     active: "default"
