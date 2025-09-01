@@ -1,0 +1,31 @@
+replicaCount: 2
+
+image:
+  repository: link-shortener-api-gateway
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+serviceAccount:
+  name: link-shortener-api-gateway
+
+# This section defines how the gateway is exposed to the outside world.
+service:
+  type: LoadBalancer # Exposes the service externally using MetalLB
+  port: 80            # The external port (standard HTTP)
+  targetPort: 8080    # The internal container port
+
+spring:
+  profiles:
+    active: "default"
+
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "500m"
+  limits:
+    memory: "1Gi"
+    cpu: "1"
+
+env:
+  - name: JAVA_TOOL_OPTIONS
+    value: "-XX:MaxRAMPercentage=75.0"

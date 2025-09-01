@@ -1,0 +1,9 @@
+replicaCount: 2
+
+spring:
+  profiles:
+    active: "prod"
+
+env:
+  - name: JAVA_TOOL_OPTIONS
+    value: "-XX:MaxRAMPercentage=75.0 -XX:+UseG1GC"
