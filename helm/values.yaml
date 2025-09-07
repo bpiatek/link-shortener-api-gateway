@@ -10,8 +10,8 @@ serviceAccount:
 
 service:
   type: ClusterIP
-  port: 80            # The external port (standard HTTP)
-  targetPort: 8080    # The internal container port
+  port: 80
+  targetPort: 8080
 
 ingress:
   hostname: "api.local"
