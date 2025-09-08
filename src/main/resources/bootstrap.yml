@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: link-shortener-api-gateway
+  cloud:
+    config:
+      uri: http://link-shortener-config-server-dev-helm:8888
+  boot:
+    admin:
+      client:
+        url: http://link-shortener-spring-admin-dev-helm:8080
