@@ -1,9 +1,8 @@
 spring:
   application:
     name: link-shortener-api-gateway
-  cloud:
-    config:
-      uri: http://link-shortener-config-server-dev-helm:8888
+  config:
+    import: "optional:configserver:http://link-shortener-config-server-dev-helm:8888"
   boot:
     admin:
       client:
