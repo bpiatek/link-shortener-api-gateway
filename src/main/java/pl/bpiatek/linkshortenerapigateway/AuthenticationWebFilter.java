@@ -1,40 +1,64 @@
 package pl.bpiatek.linkshortenerapigateway;
 
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.server.WebFilter;
-import org.springframework.web.server.WebFilterChain;
-import reactor.core.publisher.Mono;
+
+import java.io.IOException;
+import java.util.*;
 
 @Component
 @Order(-1)
-public class AuthenticationWebFilter implements WebFilter {
+class AuthenticationFilter implements Filter {
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
 
-        return ReactiveSecurityContextHolder.getContext()
-                .flatMap(securityContext -> {
-                    var authentication = securityContext.getAuthentication();
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-                    if (authentication instanceof JwtAuthenticationToken token) {
-                        var jwt = token.getToken();
-                        var userId = jwt.getSubject();
-                        var roles = jwt.getClaimAsStringList("roles");
-                        var rolesHeaderValue = (roles != null) ? String.join(",", roles) : "";
+        if (authentication instanceof JwtAuthenticationToken token) {
+            var jwt = token.getToken();
+            var userId = jwt.getSubject();
+            var roles = jwt.getClaimAsStringList("roles");
+            var rolesHeaderValue = (roles != null) ? String.join(",", roles) : "";
 
-                        var mutatedRequest = exchange.getRequest().mutate()
-                                .header("X-User-Id", userId)
-                                .header("X-User-Role", rolesHeaderValue)
-                                .build();
+            // Create a custom request wrapper to add the new headers.
+            HttpServletRequestWrapper enrichedRequest = new HttpServletRequestWrapper(httpRequest) {
+                private final Map<String, String> customHeaders = Map.of(
+                        "X-User-Id", userId,
+                        "X-User-Role", rolesHeaderValue
+                );
 
-                        return chain.filter(exchange.mutate().request(mutatedRequest).build());
+                @Override
+                public String getHeader(String name) {
+                    return customHeaders.getOrDefault(name, super.getHeader(name));
+                }
+
+                @Override
+                public Enumeration<String> getHeaderNames() {
+                    Set<String> names = new HashSet<>(customHeaders.keySet());
+                    names.addAll(Collections.list(super.getHeaderNames()));
+                    return Collections.enumeration(names);
+                }
+
+                @Override
+                public Enumeration<String> getHeaders(String name) {
+                    if (customHeaders.containsKey(name)) {
+                        return Collections.enumeration(Collections.singletonList(customHeaders.get(name)));
                     }
+                    return super.getHeaders(name);
+                }
+            };
 
-                    return chain.filter(exchange);
-                });
+            chain.doFilter(enrichedRequest, response);
+        } else {
+            chain.doFilter(request, response);
+        }
     }
 }
