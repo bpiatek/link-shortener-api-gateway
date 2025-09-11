@@ -2,9 +2,12 @@ package pl.bpiatek.linkshortenerapigateway;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 class SecurityConfig {
@@ -18,13 +21,15 @@ class SecurityConfig {
                                 "/user/auth/register",
                                 "/user/auth/login",
                                 "/user/auth/refresh",
-                                "/.well-known/jwks.json", // The user-service JWKS endpoint might be routed
-                                "/actuator/**" // Allow access to all actuator endpoints
+                                "/.well-known/jwks.json",
+                                "/actuator",
+                                "/actuator/health"
                         ).permitAll()
-
+                        .requestMatchers("/user/actuator/**").authenticated()
                         .anyRequest().authenticated()
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}));
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()));
+
 
         return http.build();
     }
