@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class VirtualThreadCheckConfig {
+class VirtualThreadCheckConfig {
 
     private static final Logger log = LoggerFactory.getLogger(VirtualThreadCheckConfig.class);
 
