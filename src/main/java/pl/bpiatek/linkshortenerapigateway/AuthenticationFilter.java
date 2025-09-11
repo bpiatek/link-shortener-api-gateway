@@ -3,6 +3,8 @@ package pl.bpiatek.linkshortenerapigateway;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -13,12 +15,15 @@ import java.util.*;
 
 @Component
 @Order(-1)
-class AuthenticationFilter implements Filter {
+public class AuthenticationFilter implements Filter {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
+        log.info("Authentication filter triggered...");
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
@@ -27,6 +32,9 @@ class AuthenticationFilter implements Filter {
             var userId = jwt.getSubject();
             var roles = jwt.getClaimAsStringList("roles");
             var rolesHeaderValue = (roles != null) ? String.join(",", roles) : "";
+
+            log.info("userId: {}", userId);
+            log.info("roles: {}", rolesHeaderValue);
 
             // Create a custom request wrapper to add the new headers.
             HttpServletRequestWrapper enrichedRequest = new HttpServletRequestWrapper(httpRequest) {
