@@ -2,7 +2,7 @@ spring:
   application:
     name: link-shortener-api-gateway
   config:
-    import: "optional:configserver:http://link-shortener-config-server-dev-helm:8888,optional:file:/vault/secrets/application.properties"
+    import: "optional:configserver:http://link-shortener-config-server-dev-helm:8888,optional:file:/vault/secrets/secrets.yml"
   boot:
     admin:
       client:
