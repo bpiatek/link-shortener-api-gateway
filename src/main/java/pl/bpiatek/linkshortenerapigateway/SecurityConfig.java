@@ -3,6 +3,7 @@ package pl.bpiatek.linkshortenerapigateway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,6 +20,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 class SecurityConfig {
 
     @Bean
+    @Lazy
     public UserDetailsService inMemoryUserDetailsManager(
             @Value("${monitoring.user.name}") String monitoringUsername,
             @Value("${monitoring.user.password}") String monitoringPassword,
