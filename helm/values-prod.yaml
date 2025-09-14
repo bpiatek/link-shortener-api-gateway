@@ -20,6 +20,6 @@ vault:
         {{- with secret "kv/data/prod/link-shortener-api-gateway/config" -}}
         monitoring:
           user:
-            name: {{ .Data.data.monitoring.user.name | quote }}
-            password: {{ .Data.data.monitoring.user.password | quote }}
+            name: {{ .Data.data.monitoring.user.name }}
+            password: {{ .Data.data.monitoring.user.password }}
         {{- end -}}
