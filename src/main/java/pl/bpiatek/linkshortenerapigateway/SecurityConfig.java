@@ -1,9 +1,8 @@
 package pl.bpiatek.linkshortenerapigateway;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,19 +15,18 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+@EnableConfigurationProperties(MonitoringUserProperties.class)
 @Configuration
 class SecurityConfig {
 
     @Bean
-    @Lazy
     public UserDetailsService inMemoryUserDetailsManager(
-            @Value("${monitoring.user.name}") String monitoringUsername,
-            @Value("${monitoring.user.password}") String monitoringPassword,
+            MonitoringUserProperties properties,
             PasswordEncoder passwordEncoder
     ) {
         var monitoringUser = User.builder()
-                .username(monitoringUsername)
-                .password(passwordEncoder.encode(monitoringPassword))
+                .username(properties.name())
+                .password(passwordEncoder.encode(properties.password()))
                 .roles("MONITORING")
                 .build();
         return new InMemoryUserDetailsManager(monitoringUser);
