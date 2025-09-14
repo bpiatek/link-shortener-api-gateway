@@ -15,7 +15,7 @@ import java.util.*;
 
 @Component
 @Order(-1)
-public class AuthenticationFilter implements Filter {
+class AuthenticationFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
 

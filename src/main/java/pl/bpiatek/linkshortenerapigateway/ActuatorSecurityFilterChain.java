@@ -8,27 +8,22 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
-class SecurityConfig {
+class ActuatorSecurityFilterChain {
 
     @Bean
-    @Order(2)
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Order(1)
+    SecurityFilterChain actuatorFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
+                .securityMatcher("/actuator/**")
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/user/auth/register",
-                                "/user/auth/login",
-                                "/user/auth/refresh",
-                                "/user/.well-known/jwks.json",
-                                "/actuator/**"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().hasRole("MONITORING")
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()));
-
+                .httpBasic(withDefaults())
+                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+                .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
