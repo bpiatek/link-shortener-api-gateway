@@ -44,10 +44,11 @@ class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/user/auth/register",
-                                "/user/auth/login",
-                                "/user/auth/refresh",
-                                "/user/.well-known/jwks.json"
+                                "/users/auth/register",
+                                "/users/auth/login",
+                                "/users/auth/refresh",
+                                "/users/.well-known/jwks.json",
+                                "/links"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
