@@ -48,7 +48,7 @@ class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(regexMatcher(GET, "/[a-zA-Z0-9]{1,7}"))
+                        .requestMatchers(regexMatcher(GET, "/[a-zA-Z0-9]+"))
                         .permitAll()
 
                         .requestMatchers(POST, "/links")
