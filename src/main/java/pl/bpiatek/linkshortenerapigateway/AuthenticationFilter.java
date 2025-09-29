@@ -23,9 +23,8 @@ class AuthenticationFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        log.info("Authentication filter triggered...");
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        var httpRequest = (HttpServletRequest) request;
 
         if (authentication instanceof JwtAuthenticationToken token) {
             var jwt = token.getToken();
@@ -33,11 +32,7 @@ class AuthenticationFilter implements Filter {
             var roles = jwt.getClaimAsStringList("roles");
             var rolesHeaderValue = (roles != null) ? String.join(",", roles) : "";
 
-            log.info("userId: {}", userId);
-            log.info("roles: {}", rolesHeaderValue);
-
-            // Create a custom request wrapper to add the new headers.
-            HttpServletRequestWrapper enrichedRequest = new HttpServletRequestWrapper(httpRequest) {
+            var enrichedRequest = new HttpServletRequestWrapper(httpRequest) {
                 private final Map<String, String> customHeaders = Map.of(
                         "X-User-Id", userId,
                         "X-User-Role", rolesHeaderValue
@@ -50,7 +45,7 @@ class AuthenticationFilter implements Filter {
 
                 @Override
                 public Enumeration<String> getHeaderNames() {
-                    Set<String> names = new HashSet<>(customHeaders.keySet());
+                    var names = new HashSet<>(customHeaders.keySet());
                     names.addAll(Collections.list(super.getHeaderNames()));
                     return Collections.enumeration(names);
                 }
