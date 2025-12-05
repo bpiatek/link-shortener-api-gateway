@@ -32,6 +32,7 @@ class AuthenticationFilter implements Filter {
             var roles = jwt.getClaimAsStringList("roles");
             var rolesHeaderValue = (roles != null) ? String.join(",", roles) : "";
 
+            log.info("Authenticating user [{}] with roles [{}]", userId, roles);
             var enrichedRequest = new HttpServletRequestWrapper(httpRequest) {
                 private final Map<String, String> customHeaders = Map.of(
                         "X-User-Id", userId,
