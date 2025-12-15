@@ -57,8 +57,9 @@ class SecurityConfig {
                                 "/users/auth/login",
                                 "/users/auth/refresh",
                                 "/users/auth/verify",
-                                "users/auth/forgot-password",
-                                "users/auth/reset-password",
+                                "/users/auth/forgot-password",
+                                "/users/auth/reset-password",
+                                "/users/auth/refresh",
                                 "/users/.well-known/jwks.json"
                         ).permitAll()
                         .anyRequest().authenticated()
