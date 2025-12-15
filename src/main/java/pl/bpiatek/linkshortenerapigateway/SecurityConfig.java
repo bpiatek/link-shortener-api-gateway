@@ -46,12 +46,17 @@ class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(regexMatcher(GET, "/[a-zA-Z0-9]+"))
+                        // 1. Allow all traffic to the UI Service (ls.bpiatek.pl)
+                        // The UI Service handles its own login/cookie logic.
+                        .requestMatchers(request -> "ls.bpiatek.pl".equals(request.getServerName()))
+//                        .requestMatchers(regexMatcher(GET, "/[a-zA-Z0-9]+"))
                         .permitAll()
 
                         .requestMatchers(POST, "/links")
                         .authenticated()
 
+                        // 2. API Domain (api.bpiatek.pl)
+                        // Public Auth Endpoints
                         .requestMatchers(
                                 "/users/auth/register",
                                 "/users/auth/login",
@@ -59,7 +64,6 @@ class SecurityConfig {
                                 "/users/auth/verify",
                                 "/users/auth/forgot-password",
                                 "/users/auth/reset-password",
-                                "/users/auth/refresh",
                                 "/users/.well-known/jwks.json"
                         ).permitAll()
                         .anyRequest().authenticated()
