@@ -53,6 +53,7 @@ class SecurityConfig {
                         .requestMatchers(
                                 "/users/auth/register",
                                 "/users/auth/login",
+                                "/users/auth/logout",
                                 "/users/auth/refresh",
                                 "/users/auth/verify",
                                 "/users/auth/forgot-password",
