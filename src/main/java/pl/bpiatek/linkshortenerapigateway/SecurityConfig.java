@@ -13,10 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.Customizer.withDefaults;
-import static org.springframework.security.web.util.matcher.RegexRequestMatcher.regexMatcher;
 
 @EnableConfigurationProperties(MonitoringUserProperties.class)
 @Configuration
@@ -49,13 +46,9 @@ class SecurityConfig {
                         // 1. Allow all traffic to the UI Service (ls.bpiatek.pl)
                         // The UI Service handles its own login/cookie logic.
                         .requestMatchers(request -> "ls.bpiatek.pl".equals(request.getServerName()))
-//                        .requestMatchers(regexMatcher(GET, "/[a-zA-Z0-9]+"))
                         .permitAll()
 
-                        .requestMatchers(POST, "/links")
-                        .authenticated()
-
-                        // 2. API Domain (api.bpiatek.pl)
+                        // 2. API Domain (apidev.bpiatek.pl)
                         // Public Auth Endpoints
                         .requestMatchers(
                                 "/users/auth/register",
