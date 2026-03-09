@@ -6,4 +6,5 @@ spring:
   boot:
     admin:
       client:
-        url: http://link-shortener-spring-admin-dev-helm:8080
+        instance:
+          service-base-url: http://${POD_IP:localhost}:8080
