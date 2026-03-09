@@ -67,8 +67,8 @@ jobs:
             ./helm \
             --namespace $TARGET_ENV \
             --values helm/values-$TARGET_ENV.yaml \
-            --set image.repository=${{ steps.image_name.outputs.name }} \
-            --set image.tag=${{ steps.get_tag.outputs.tag }} \
+            --set image.repository=${{ steps.image_info.outputs.name }} \
+            --set image.tag=${{ steps.image_info.outputs.tag }} \
             --set spring.profiles.active=$TARGET_ENV \
             --atomic \
             --timeout 3m
