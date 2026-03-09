@@ -9,7 +9,7 @@ ingress:
 
 env:
   - name: JAVA_TOOL_OPTIONS
-    value: "-XX:MaxRAMPercentage=75.0 -XX:+UseG1GC"
+    value: "-XX:MaxRAMPercentage=65.0 -XX:+UseG1GC"
 
 vault:
   role: "link-shortener-api-gateway-dev-role"

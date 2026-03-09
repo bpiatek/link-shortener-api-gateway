@@ -2,22 +2,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}
-  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ .Release.Name }}-{{ .Chart.Name }}
 spec:
-  # --- LOADBALANCER ---
-  # This type tells Kubernetes to request an external IP address.
-  # In your cluster, MetalLB will provide this IP.
-  type: {{ .Values.service.type }}
+  type: ClusterIP
   ports:
-    - # --- Port 80 ---
-      # This is the external port that users will connect to.
-      port: {{ .Values.service.port }}
-      # --- Target Port 8080 ---
-      # This is the internal port on the pod where the gateway application is listening.
-      targetPort: {{ .Values.service.targetPort }}
+    - port: 8080
+      targetPort: 8080
       protocol: TCP
-      name: http
+      name: http-metrics
   selector:
     app: {{ .Release.Name }}-{{ .Chart.Name }}
